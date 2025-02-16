@@ -1,5 +1,6 @@
 package com.gabo.best_travel;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +48,24 @@ public class BestTravelApplication implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		var fly = flyRepository.findById(15L).get();
-		var hotel = hotelRepository.findById(5L).get();
-		var ticket = ticketRepository.findById(UUID.fromString("12345678-1234-5678-2236-567812345678")).get();
-		var reservation = reservationRepository.findById(UUID.fromString("12345678-1234-5678-1234-567812345678")).get();
-		var customer = customerRepository.findById("VIKI771012HMCRG093").get();
+		// var fly = flyRepository.findById(15L).get();
+		// var hotel = hotelRepository.findById(5L).get();
+		// var ticket = ticketRepository.findById(UUID.fromString("12345678-1234-5678-2236-567812345678")).get();
+		// var reservation = reservationRepository.findById(UUID.fromString("12345678-1234-5678-1234-567812345678")).get();
+		// var customer = customerRepository.findById("VIKI771012HMCRG093").get();
 
-		log.info(String.valueOf(fly));
-		log.info(String.valueOf(hotel));
-		log.info(String.valueOf(ticket));
-		log.info(String.valueOf(reservation));
-		log.info(String.valueOf(customer));
+		// log.info(String.valueOf(fly));
+		// log.info(String.valueOf(hotel));
+		// log.info(String.valueOf(ticket));
+		// log.info(String.valueOf(reservation));
+		// log.info(String.valueOf(customer));
 
+		// this.flyRepository.selectLessPrice(BigDecimal.valueOf(20)).forEach(f -> System.out.println(f));
+		// this.flyRepository.selectBetweenPrice(BigDecimal.valueOf(10), BigDecimal.valueOf(15)).forEach(f -> System.out.println(f));
+
+		var fly = flyRepository.findByTicketId(UUID.fromString("12345678-1234-5678-2236-567812345678"));
+		
+		System.out.println(fly);
 	}
 
 }
