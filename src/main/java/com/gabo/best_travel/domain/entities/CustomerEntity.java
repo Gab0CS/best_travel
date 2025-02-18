@@ -57,7 +57,7 @@ public class CustomerEntity {
     @EqualsAndHashCode.Exclude
     @OneToMany(
         cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         orphanRemoval = true,
         mappedBy = "customer"
     )
