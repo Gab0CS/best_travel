@@ -23,6 +23,13 @@ CREATE TABLE fly
     price double precision NOT NULL,
     CONSTRAINT pk_fly PRIMARY KEY ( "id" )
 );
+CREATE TABLE tour
+(
+    "id"             bigserial NOT NULL,
+    id_customer       varchar(20) NOT NULL,
+    CONSTRAINT pk_tour PRIMARY KEY ( "id" ),
+    CONSTRAINT fk_customer FOREIGN KEY ( id_customer ) REFERENCES customer ( dni ) ON DELETE NO ACTION
+);
 CREATE TABLE ticket
 (
     "id"           uuid NOT NULL,
@@ -66,13 +73,7 @@ CREATE TABLE reservation
     CONSTRAINT fk_tour_r FOREIGN KEY ( tour_id ) REFERENCES tour ( "id" ) ON DELETE CASCADE
 );
 
-CREATE TABLE tour
-(
-    "id"             bigserial NOT NULL,
-    id_customer       varchar(20) NOT NULL,
-    CONSTRAINT pk_tour PRIMARY KEY ( "id" ),
-    CONSTRAINT fk_customer FOREIGN KEY ( id_customer ) REFERENCES customer ( dni ) ON DELETE NO ACTION
-);
+
 
 
 
