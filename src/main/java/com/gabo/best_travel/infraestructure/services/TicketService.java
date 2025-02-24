@@ -82,8 +82,8 @@ public class TicketService implements ITicketService {
 
     @Override
     public void delete(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        var ticketToDelete = ticketRepository.findById(id).orElseThrow();
+        this.ticketRepository.delete(ticketToDelete);
     }
     
     private TicketResponse entityToResponse(TicketEntity entity){
