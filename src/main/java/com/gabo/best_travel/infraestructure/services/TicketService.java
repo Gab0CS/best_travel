@@ -16,6 +16,7 @@ import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.FlyRepository;
 import com.gabo.best_travel.domain.repositories.TicketRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ITicketService;
+import com.gabo.best_travel.util.BestTravelUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,8 @@ public class TicketService implements ITicketService {
         .customer(customer)
         .price(fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage)))
         .purchaseDate(LocalDateTime.now())
-        .arrivalDate(LocalDateTime.now())
-        .departureDate(LocalDateTime.now())
+        .departureDate(BestTravelUtil.getRandomSoon())
+        .arrivalDate(BestTravelUtil.getRandomLater())
         .build();
 
         var ticketPersisted = this.ticketRepository.save(ticketToPersist);
@@ -75,8 +76,8 @@ public class TicketService implements ITicketService {
 
         ticketToUpdate.setFly(fly);
         ticketToUpdate.setPrice(fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage)));
-        ticketToUpdate.setDepartureDate(LocalDateTime.now());
-        ticketToUpdate.setArrivalDate(LocalDateTime.now());
+        ticketToUpdate.setDepartureDate(BestTravelUtil.getRandomSoon());
+        ticketToUpdate.setArrivalDate(BestTravelUtil.getRandomLater());
 
         var ticketUpdated = this.ticketRepository.save(ticketToUpdate);
 
