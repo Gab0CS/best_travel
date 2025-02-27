@@ -2,27 +2,20 @@ package com.gabo.best_travel.infraestructure.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoPeriod;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime; 
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.gabo.best_travel.api.models.request.ReservationRequest;
-import com.gabo.best_travel.api.models.response.FlyResponse;
 import com.gabo.best_travel.api.models.response.HotelResponse;
 import com.gabo.best_travel.api.models.response.ReservationResponse;
-import com.gabo.best_travel.api.models.response.TicketResponse;
-import com.gabo.best_travel.domain.entities.HotelEntity;
 import com.gabo.best_travel.domain.entities.ReservationEntity;
-import com.gabo.best_travel.domain.entities.TicketEntity;
 import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.HotelRepository;
 import com.gabo.best_travel.domain.repositories.ReservationRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IReservationService;
-import com.gabo.best_travel.util.BestTravelUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -37,6 +30,12 @@ public class ReservationService implements IReservationService {
     private final HotelRepository hotelRepository;
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
+
+    @Override
+    public BigDecimal findPrice(Long hotelId) {
+       var hotel = this.hotelRepository.findById(hotelId).orElseThrow();
+       return hotel.getPrice().add(hotel.getPrice().multiply(charger_price_percentage));
+    }
 
     @Override
     public ReservationResponse create(ReservationRequest request) {
@@ -62,17 +61,31 @@ public class ReservationService implements IReservationService {
 
     @Override
     public ReservationResponse read(UUID id) {
-        return null;
+        var reservationFromDB = this.reservationRepository.findById(id).orElseThrow();
+
+        return this.entityToResponse(reservationFromDB);
     }
 
     @Override
     public ReservationResponse update(ReservationRequest request, UUID id) {
-        return null;
+        var hotel = this.hotelRepository.findById(request.getIdHotel()).orElseThrow();
+        
+        var reservationToUpdate = this.reservationRepository.findById(id).orElseThrow();
+        reservationToUpdate.setHotel(hotel);
+        reservationToUpdate.setTotalDays(request.getTotalDays());
+        reservationToUpdate.setDateTimeReservation(LocalDateTime.now());
+        reservationToUpdate.setDateStart(LocalDate.now());
+        reservationToUpdate.setDateEnd(LocalDate.now().plusDays(request.getTotalDays()));
+        reservationToUpdate.setPrice(hotel.getPrice());
+        var reservationUpdated = this.reservationRepository.save(reservationToUpdate);
+        log.info("Reservation updated with id {}" ,reservationToUpdate.getId());
+        return this.entityToResponse(reservationUpdated);
     }
 
     @Override
     public void delete(UUID id) {
-
+        var reservationToDelete = reservationRepository.findById(id).orElseThrow();
+        this.reservationRepository.delete(reservationToDelete);
     }
 
     private ReservationResponse entityToResponse(ReservationEntity entity){
