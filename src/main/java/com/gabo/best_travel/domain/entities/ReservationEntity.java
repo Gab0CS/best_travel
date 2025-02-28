@@ -36,6 +36,7 @@ public class ReservationEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id") //The column of fly that we need to map
     private HotelEntity hotel; //Fk, One to many, one hotel can have several reservations
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = true) 
     private TourEntity tour;
