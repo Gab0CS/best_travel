@@ -36,6 +36,7 @@ public class FlyService implements IFlyService {
             case LOWER: pageRequest = PageRequest.of(page,size, Sort.by(FIELD_BY_SORT).ascending());
                 break;
             case UPPER: pageRequest = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT).descending());
+                break;
         }
         return this.flyRepository.findAll(pageRequest).map(this::entityToResponse);
     }
