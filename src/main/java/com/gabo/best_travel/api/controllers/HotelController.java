@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gabo.best_travel.api.models.response.FlyResponse;
 import com.gabo.best_travel.api.models.response.HotelResponse;
 import com.gabo.best_travel.infraestructure.services.HotelService;
 import com.gabo.best_travel.util.SortType;
@@ -31,7 +30,6 @@ public class HotelController {
         @RequestParam Integer size,
         @RequestHeader(required = false) SortType sortType){
             if (Objects.isNull(sortType)) sortType = SortType.NONE;
-            @SuppressWarnings("deprecation")
             var response = this.hotelService.readAll(page, size, sortType);
             return response.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(response);
     }
@@ -39,7 +37,6 @@ public class HotelController {
     @GetMapping(path = "less_price")
     public ResponseEntity<Set<HotelResponse>> getLessPrice(
         @RequestParam BigDecimal price){
-            @SuppressWarnings("deprecation")
             var response = this.hotelService.readLessPrice(price);
             
             return response.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(response);
@@ -48,7 +45,6 @@ public class HotelController {
     @GetMapping(path = "between_price")
     public ResponseEntity<Set<HotelResponse>> getBetweenPrice(
         @RequestParam BigDecimal min, @RequestParam BigDecimal max){
-            @SuppressWarnings("deprecation")
             var response = this.hotelService.readBetweenPrice(min, max);
             
             return response.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(response);
@@ -57,9 +53,10 @@ public class HotelController {
     @GetMapping(path = "rating")
     public ResponseEntity<Set<HotelResponse>> getByRating(
         @RequestParam Integer rating){
-            @SuppressWarnings("deprecation")
-            var response = this.hotelService.readByRating(rating);
+            if (rating > 4) rating = 4;
+            if (rating < 1) rating = 1;
             
+            var response = this.hotelService.readByRating(rating);
             return response.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(response);
     }
 

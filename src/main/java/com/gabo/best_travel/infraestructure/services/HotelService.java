@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.gabo.best_travel.api.models.response.HotelResponse;

@@ -2,7 +2,6 @@ package com.gabo.best_travel.infraestructure.services;
 
 import java.math.BigDecimal;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
