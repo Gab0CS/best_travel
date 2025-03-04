@@ -14,6 +14,7 @@ import com.gabo.best_travel.domain.entities.FlyEntity;
 import com.gabo.best_travel.domain.entities.HotelEntity;
 import com.gabo.best_travel.domain.entities.ReservationEntity;
 import com.gabo.best_travel.domain.entities.TicketEntity;
+import com.gabo.best_travel.domain.entities.TourEntity;
 import com.gabo.best_travel.domain.repositories.ReservationRepository;
 import com.gabo.best_travel.domain.repositories.TicketRepository;
 import com.gabo.best_travel.infraestructure.services.ReservationService;
@@ -72,5 +73,33 @@ public class TourHelper {
         return response;
     }
 
+    public TicketEntity createTicket(FlyEntity fly, CustomerEntity customer){
+        var ticketToPersist = TicketEntity.builder()
+            .id(UUID.randomUUID())
+            .fly(fly)
+            .customer(customer)
+            .price(fly.getPrice().add(fly.getPrice().multiply(TicketService.charger_price_percentage)))
+            .purchaseDate(LocalDateTime.now())
+            .departureDate(BestTravelUtil.getRandomSoon())
+            .arrivalDate(BestTravelUtil.getRandomLater())
+            .build();
+
+        return this.ticketRepository.save(ticketToPersist);
+    }
+
+    public ReservationEntity createReservation(HotelEntity hotel, CustomerEntity customer, Integer totalDays){
+        var reservationToPersist = ReservationEntity.builder()
+        .id(UUID.randomUUID())
+        .hotel(hotel)
+        .customer(customer)
+        .totalDays(totalDays)
+        .dateTimeReservation(LocalDateTime.now())
+        .dateStart(LocalDate.now())
+        .dateEnd(LocalDate.now().plusDays(totalDays))
+        .price(hotel.getPrice().add(hotel.getPrice().multiply(ReservationService.charger_price_percentage)))
+        .build();   
+
+        return this.reservationRepository.save(reservationToPersist);
+    }
     
 }

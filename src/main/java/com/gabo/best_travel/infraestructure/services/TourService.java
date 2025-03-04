@@ -3,10 +3,11 @@ package com.gabo.best_travel.infraestructure.services;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.Tables;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gabo.best_travel.api.models.request.TourRequest;
 import com.gabo.best_travel.api.models.response.TourResponse;
@@ -20,9 +21,10 @@ import com.gabo.best_travel.domain.repositories.FlyRepository;
 import com.gabo.best_travel.domain.repositories.HotelRepository;
 import com.gabo.best_travel.domain.repositories.TourRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ITourService;
+import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
 import com.gabo.best_travel.infraestructure.helper.TourHelper;
 
-import jakarta.transaction.Transactional;
+
 import lombok.AllArgsConstructor;
 
 @Transactional
@@ -35,6 +37,7 @@ public class TourService implements ITourService {
     private final HotelRepository hotelRepository;
     private final CustomerRepository customerRepository;
     private final TourHelper tourHelper;
+    private final CustomerHelper customerHelper;
     
     
     @Override
@@ -55,6 +58,9 @@ public class TourService implements ITourService {
             .build();
 
         var tourSaved = this.tourRepository.save(tourToSave);
+
+        this.customerHelper.increase(customer.getDni(), TourService.class);
+
         return TourResponse.builder()
         .reservationsIds(tourSaved.getReservations().stream().map(ReservationEntity::getId).collect(Collectors.toSet()))
         .ticketsIds(tourSaved.getTickets().stream().map(TicketEntity::getId).collect(Collectors.toSet()))
@@ -82,27 +88,37 @@ public class TourService implements ITourService {
     }
 
     @Override
-    public void removeTicket(UUID ticketId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeTicket'");
+    public void removeTicket(Long tourId, UUID ticketId) {
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        tourUpdate.removeTicket(ticketId);
+        this.tourRepository.save(tourUpdate);
     }
 
     @Override
     public UUID addTicket(Long flyId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTicket'");
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        var fly = this.flyRepository.findById(flyId).orElseThrow();
+        var ticket = this.tourHelper.createTicket(fly, tourUpdate.getCustomer());
+        tourUpdate.addTicket(ticket);
+        this.tourRepository.save(tourUpdate);
+        return ticket.getId();
     }
 
     @Override
-    public void removeReservation(UUID reservationId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeReservation'");
+    public void removeReservation(Long tourId, UUID reservationId) {
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        tourUpdate.removeReservation(reservationId);
+        this.tourRepository.save(tourUpdate);
     }
 
     @Override
-    public UUID addReservation(Long reservationId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addReservation'");
+    public UUID addReservation(Long tourId, Long hotelId, Integer totalDays) {
+        var tourToUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        var hotel = this.hotelRepository.findById(hotelId).orElseThrow();
+        var reservation = this.tourHelper.createReservation(hotel, tourToUpdate.getCustomer(), totalDays);
+        tourToUpdate.addReservation(reservation);
+        this.tourRepository.save(tourToUpdate);
+        return reservation.getId();
     }
     
 }

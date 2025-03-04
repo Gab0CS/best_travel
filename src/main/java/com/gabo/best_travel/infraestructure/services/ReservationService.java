@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gabo.best_travel.api.models.request.ReservationRequest;
 import com.gabo.best_travel.api.models.response.HotelResponse;
@@ -16,8 +17,9 @@ import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.HotelRepository;
 import com.gabo.best_travel.domain.repositories.ReservationRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IReservationService;
+import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
 
-import jakarta.transaction.Transactional;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,7 @@ public class ReservationService implements IReservationService {
     private final HotelRepository hotelRepository;
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
+    private final CustomerHelper customerHelper;
 
     @Override
     public BigDecimal findPrice(Long hotelId) {
@@ -55,7 +58,7 @@ public class ReservationService implements IReservationService {
 
         var reservationPersisted = reservationRepository.save(reservationToPersist);
         log.info("Reservation succesfully saved with id: {}", reservationPersisted.getId());
-
+        this.customerHelper.increase(customer.getDni(), ReservationService.class);
         return this.entityToResponse(reservationPersisted);
     }
 

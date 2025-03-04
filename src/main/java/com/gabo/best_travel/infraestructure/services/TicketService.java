@@ -16,6 +16,7 @@ import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.FlyRepository;
 import com.gabo.best_travel.domain.repositories.TicketRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ITicketService;
+import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
 import com.gabo.best_travel.util.BestTravelUtil;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class TicketService implements ITicketService {
     private final FlyRepository flyRepository;
     private final CustomerRepository customerRepository;
     private final TicketRepository ticketRepository;
+    private final CustomerHelper customerHelper;
 
 
     @Override
@@ -57,7 +59,7 @@ public class TicketService implements ITicketService {
 
         log.info("Ticket saved with id: {}", ticketPersisted.getId());
 
-
+        customerHelper.increase(customer.getDni(), TicketService.class);
 
         return this.entityToResponse(ticketPersisted);
     }

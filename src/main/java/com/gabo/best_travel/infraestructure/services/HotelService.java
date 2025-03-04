@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.stream.Collectors;
@@ -17,11 +18,10 @@ import com.gabo.best_travel.domain.repositories.HotelRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IHotelService;
 import com.gabo.best_travel.util.SortType;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 @AllArgsConstructor
 public class HotelService implements IHotelService {
