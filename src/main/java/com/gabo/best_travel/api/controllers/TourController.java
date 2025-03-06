@@ -19,6 +19,7 @@ import com.gabo.best_travel.api.models.request.TourRequest;
 import com.gabo.best_travel.api.models.response.TourResponse;
 import com.gabo.best_travel.infraestructure.abstract_service.ITourService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -30,40 +31,47 @@ public class TourController {
     private final ITourService tourService;
 
     @PostMapping
+    @Operation(summary = "Saves in system a Tour based in list hotels and flights list")
     public ResponseEntity<TourResponse> post(@Valid @RequestBody TourRequest request){
         System.out.println(tourService.getClass().getSimpleName());
         return ResponseEntity.ok(this.tourService.create(request));
     }
 
     @GetMapping(path = "{id}")
+    @Operation(summary = "Returns a tour with a provided ID")
     public ResponseEntity<TourResponse> get(@PathVariable Long id){
         return ResponseEntity.ok(this.tourService.read(id));
     }
     @DeleteMapping(path = "{id}")
+    @Operation(summary = "Deletes a tour with a provided ID")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.tourService.delete(id);
         return ResponseEntity.noContent().build() ;
     }
 
     @PatchMapping(path = "{tourId}/remove_ticket/{ticketId}")
+    @Operation(summary = "Returns a ticket from a tour with a provided ID")
     public ResponseEntity<TourResponse> deleteTicket(@Valid @PathVariable Long tourId,@PathVariable UUID ticketId){
         this.tourService.removeTicket(tourId, ticketId);
         return ResponseEntity.noContent().build() ;
     }
 
     @PatchMapping(path = "{tourId}/add_ticket/{flyId}")
+    @Operation(summary = "Returns a ticket from a tour with a provided ID")
     public ResponseEntity<Map<String, UUID >> postTicket(@PathVariable Long tourId,@PathVariable Long flyId){
         var response = Collections.singletonMap("ticketId", this.tourService.addTicket(tourId, flyId));
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping(path = "{tourId}/remove_reservation/{reservationId}")
+    @Operation(summary = "Deletes an hotel reservation from a tour with a provided ID")
     public ResponseEntity<TourResponse> deleteReservation(@PathVariable Long tourId,@PathVariable UUID ticketId){
         this.tourService.removeTicket(tourId, ticketId);
         return ResponseEntity.noContent().build() ;
     }
 
     @PatchMapping(path = "{tourId}/add_reservation/{hotelId}")
+    @Operation(summary = "Returns a ticket from a tour with a provided ID")
     public ResponseEntity<Map<String, UUID >> postTicket(
         @PathVariable Long tourId, 
         @PathVariable Long hotelId,

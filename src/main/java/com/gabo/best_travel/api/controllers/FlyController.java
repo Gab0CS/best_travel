@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gabo.best_travel.infraestructure.abstract_service.IFlyService;
 import com.gabo.best_travel.util.SortType;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.experimental.var;
 
@@ -28,6 +29,7 @@ public class FlyController {
     private final IFlyService flyService;
 
     @GetMapping
+    @Operation(summary = "To return all available flights with a page and size ")
     public ResponseEntity<Page<FlyResponse>> getAll(
         @RequestParam Integer page,
         @RequestParam Integer size,
@@ -39,6 +41,7 @@ public class FlyController {
     }
 
     @GetMapping(path = "less_price")
+    @Operation(summary = "Returns flights with a price less than provided")
     public ResponseEntity<Set<FlyResponse>> getLessPrice(
         @RequestParam BigDecimal price){
             @SuppressWarnings("deprecation")
@@ -48,6 +51,7 @@ public class FlyController {
     }
 
     @GetMapping(path = "between_price")
+    @Operation(summary = "Returns flights between two prices than provided")
     public ResponseEntity<Set<FlyResponse>> getBetweenPrice(
         @RequestParam BigDecimal min, @RequestParam BigDecimal max){
             @SuppressWarnings("deprecation")
@@ -57,6 +61,7 @@ public class FlyController {
     }
 
     @GetMapping(path = "origin_destiny")
+    @Operation(summary = "Returns flights within an specific origin and destiny")
     public ResponseEntity<Set<FlyResponse>> getByOriginDestiny(
         @RequestParam String origin, @RequestParam String destiny){
             @SuppressWarnings("deprecation")
