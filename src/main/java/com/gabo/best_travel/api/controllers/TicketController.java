@@ -17,6 +17,7 @@ import com.gabo.best_travel.api.models.request.TicketRequest;
 import com.gabo.best_travel.api.models.response.TicketResponse;
 import com.gabo.best_travel.infraestructure.abstract_service.ITicketService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +32,7 @@ public class TicketController {
     private final ITicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<TicketResponse> post(@RequestBody TicketRequest request){
+    public ResponseEntity<TicketResponse> post(@Valid @RequestBody TicketRequest request){
         return ResponseEntity.ok(ticketService.create(request));
     }
 
@@ -41,7 +42,7 @@ public class TicketController {
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<TicketResponse> put(@PathVariable UUID id, 
+    public ResponseEntity<TicketResponse> put(@Valid @PathVariable UUID id, 
     @RequestBody TicketRequest request){
         return ResponseEntity.ok(this.ticketService.update(request, id));
     }
