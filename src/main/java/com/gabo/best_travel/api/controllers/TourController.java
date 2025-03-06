@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,9 @@ import com.gabo.best_travel.api.models.response.TourResponse;
 import com.gabo.best_travel.infraestructure.abstract_service.ITourService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -30,6 +34,13 @@ public class TourController {
     
     private final ITourService tourService;
 
+    @ApiResponse(responseCode = "400", 
+    description = "When request have an invalid field",
+    content = {
+        @Content(mediaType = "application/json", schema = @Schema(implementation = Errors.class))
+    }
+    )
+    
     @PostMapping
     @Operation(summary = "Saves in system a Tour based in list hotels and flights list")
     public ResponseEntity<TourResponse> post(@Valid @RequestBody TourRequest request){

@@ -18,12 +18,14 @@ import com.gabo.best_travel.infraestructure.abstract_service.IFlyService;
 import com.gabo.best_travel.util.SortType;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.experimental.var;
 
 @RestController
 @RequestMapping(path = "fly")
 @AllArgsConstructor
+@Tag(name = "Existing Flys")
 public class FlyController {
     //For a controller we inject the interface
     private final IFlyService flyService;
