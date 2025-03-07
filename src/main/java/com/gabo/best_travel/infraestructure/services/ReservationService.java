@@ -2,7 +2,8 @@ package com.gabo.best_travel.infraestructure.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -17,6 +18,7 @@ import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.HotelRepository;
 import com.gabo.best_travel.domain.repositories.ReservationRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IReservationService;
+import com.gabo.best_travel.infraestructure.helper.ApiCurrencyConnectorHelper;
 import com.gabo.best_travel.infraestructure.helper.BlackListHelper;
 import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
 import com.gabo.best_travel.util.enums.Tables;
@@ -36,11 +38,17 @@ public class ReservationService implements IReservationService {
     private final ReservationRepository reservationRepository;
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+    private final ApiCurrencyConnectorHelper currencyConnectorHelper;
 
     @Override
-    public BigDecimal findPrice(Long hotelId) {
+    public BigDecimal findPrice(Long hotelId, Currency currency) {
        var hotel = this.hotelRepository.findById(hotelId).orElseThrow(() -> new IdNotFoundException(Tables.hotel.name()));
-       return hotel.getPrice().add(hotel.getPrice().multiply(charger_price_percentage));
+       var priceInDollars = hotel.getPrice().add(hotel.getPrice().multiply(charger_price_percentage));
+       if (currency.equals(Currency.getInstance("USD"))) return priceInDollars;
+
+       var currencyDto = this.currencyConnectorHelper.getCurrency(currency);
+       log.info("Api currency in {}, response: {}" ,currencyDto.getExcahngeDate().toString(), currencyDto.getRates());
+       return priceInDollars.multiply(currencyDto.getRates().get(currency));
     }
 
     @Override

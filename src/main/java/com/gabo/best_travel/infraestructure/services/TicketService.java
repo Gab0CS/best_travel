@@ -38,6 +38,7 @@ public class TicketService implements ITicketService {
     private final BlackListHelper blackListHelper;
 
 
+
     @Override
     public BigDecimal findPrice(Long flyId) {
        var fly = this.flyRepository.findById(flyId).orElseThrow(() -> new IdNotFoundException(Tables.fly.name()));
