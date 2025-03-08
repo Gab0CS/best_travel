@@ -2,6 +2,7 @@ package com.gabo.best_travel.infraestructure.services;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.gabo.best_travel.domain.repositories.TourRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ITourService;
 import com.gabo.best_travel.infraestructure.helper.BlackListHelper;
 import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
+import com.gabo.best_travel.infraestructure.helper.EmailHelper;
 import com.gabo.best_travel.infraestructure.helper.TourHelper;
 import com.gabo.best_travel.util.exceptions.IdNotFoundException;
 import com.gabo.best_travel.util.enums.Tables;
@@ -40,6 +42,7 @@ public class TourService implements ITourService {
     private final TourHelper tourHelper;
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+    private final EmailHelper emailHelper;
     
     
     @Override
@@ -63,7 +66,9 @@ public class TourService implements ITourService {
         var tourSaved = this.tourRepository.save(tourToSave);
 
         this.customerHelper.increase(customer.getDni(), TourService.class);
-
+        if (Objects.nonNull(request.getEmail())) {
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.tour.name());
+        }
         return TourResponse.builder()
         .reservationsIds(tourSaved.getReservations().stream().map(ReservationEntity::getId).collect(Collectors.toSet()))
         .ticketsIds(tourSaved.getTickets().stream().map(TicketEntity::getId).collect(Collectors.toSet()))

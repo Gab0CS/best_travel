@@ -2,6 +2,7 @@ package com.gabo.best_travel.infraestructure.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import com.gabo.best_travel.domain.repositories.TicketRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ITicketService;
 import com.gabo.best_travel.infraestructure.helper.BlackListHelper;
 import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
+import com.gabo.best_travel.infraestructure.helper.EmailHelper;
 import com.gabo.best_travel.util.BestTravelUtil;
 import com.gabo.best_travel.util.enums.Tables;
 import com.gabo.best_travel.util.exceptions.IdNotFoundException;
@@ -36,6 +38,7 @@ public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+    private final EmailHelper emailHelper;
 
 
 
@@ -64,6 +67,9 @@ public class TicketService implements ITicketService {
         var ticketPersisted = this.ticketRepository.save(ticketToPersist);
 
         log.info("Ticket saved with id: {}", ticketPersisted.getId());
+        if (Objects.nonNull(request.getEmail())) {
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.ticket.name());
+        }
 
         customerHelper.increase(customer.getDni(), TicketService.class);
 

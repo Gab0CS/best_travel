@@ -2,6 +2,7 @@ package com.gabo.best_travel.api.models.request;
 
 import java.io.Serializable;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -23,4 +24,6 @@ public class TicketRequest implements Serializable {
     @Positive
     @NotNull(message = "Id Fly is mandatory")
     private Long idFly;
+    @Email(message = "Invalid email")
+    private String email;
 }

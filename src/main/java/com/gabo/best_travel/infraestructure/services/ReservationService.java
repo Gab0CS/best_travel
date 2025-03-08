@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Currency;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gabo.best_travel.api.models.request.ReservationRequest;
 import com.gabo.best_travel.api.models.response.HotelResponse;
 import com.gabo.best_travel.api.models.response.ReservationResponse;
+import com.gabo.best_travel.domain.entities.HotelEntity;
 import com.gabo.best_travel.domain.entities.ReservationEntity;
 import com.gabo.best_travel.domain.repositories.CustomerRepository;
 import com.gabo.best_travel.domain.repositories.HotelRepository;
@@ -21,6 +23,7 @@ import com.gabo.best_travel.infraestructure.abstract_service.IReservationService
 import com.gabo.best_travel.infraestructure.helper.ApiCurrencyConnectorHelper;
 import com.gabo.best_travel.infraestructure.helper.BlackListHelper;
 import com.gabo.best_travel.infraestructure.helper.CustomerHelper;
+import com.gabo.best_travel.infraestructure.helper.EmailHelper;
 import com.gabo.best_travel.util.enums.Tables;
 import com.gabo.best_travel.util.exceptions.IdNotFoundException;
 
@@ -39,6 +42,7 @@ public class ReservationService implements IReservationService {
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
     private final ApiCurrencyConnectorHelper currencyConnectorHelper;
+    private final EmailHelper emailHelper;
 
     @Override
     public BigDecimal findPrice(Long hotelId, Currency currency) {
@@ -54,7 +58,7 @@ public class ReservationService implements IReservationService {
     @Override
     public ReservationResponse create(ReservationRequest request) {
         blackListHelper.isInBlackListCustomer(request.getIdClient());
-        var hotel = this.hotelRepository.findById(request.getIdHotel()).orElseThrow(() -> new IdNotFoundException(Tables.hotel.name()));
+        HotelEntity hotel = this.hotelRepository.findById(request.getIdHotel()).orElseThrow(() -> new IdNotFoundException(Tables.hotel.name()));
         var customer = this.customerRepository.findById(request.getIdClient()).orElseThrow(() -> new IdNotFoundException(Tables.customer.name()));
         
         var reservationToPersist = ReservationEntity.builder()
@@ -71,6 +75,9 @@ public class ReservationService implements IReservationService {
         var reservationPersisted = reservationRepository.save(reservationToPersist);
         log.info("Reservation succesfully saved with id: {}", reservationPersisted.getId());
         this.customerHelper.increase(customer.getDni(), ReservationService.class);
+        if (Objects.nonNull(request.getEmail())) {
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.reservation.name());
+        }
         return this.entityToResponse(reservationPersisted);
     }
 
