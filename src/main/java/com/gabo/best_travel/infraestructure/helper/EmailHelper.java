@@ -6,9 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -30,7 +32,7 @@ public class EmailHelper {
         try {
             message.setFrom(new InternetAddress(("gabocanseco@gmail.com")));
             message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
-            message.setContent(htmlContent, "text/html; charset=utf-8");
+            message.setContent(htmlContent, MediaType.TEXT_HTML_VALUE);
             mailSender.send(message);
         } catch (MessagingException e) {
             log.error("Error sending email", e);
@@ -43,7 +45,7 @@ public class EmailHelper {
             var html = lines.collect(Collectors.joining());
             return html.replace("{name}", name).replace("{product}", product);
         } catch (IOException e) {
-            log.error("Can read HTML template", e);
+            log.error("Can't read HTML template", e);
             throw new RuntimeException();
         }
     }
