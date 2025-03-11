@@ -1,4 +1,4 @@
-package com.gabo.best_travel.domain.repositories;
+package com.gabo.best_travel.domain.repositories.jpa;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.gabo.best_travel.domain.entities.FlyEntity;
+import com.gabo.best_travel.domain.entities.jpa.FlyEntity;
 
 public interface FlyRepository extends JpaRepository<FlyEntity, Long>{
     @Query("select f from fly f where f.price < :price")

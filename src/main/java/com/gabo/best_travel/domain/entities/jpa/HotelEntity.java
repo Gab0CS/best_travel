@@ -1,4 +1,4 @@
-package com.gabo.best_travel.domain.entities;
+package com.gabo.best_travel.domain.entities.jpa;
 
 import java.math.BigDecimal;
 import java.util.Set;

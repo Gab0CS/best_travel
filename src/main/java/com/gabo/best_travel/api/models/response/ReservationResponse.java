@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gabo.best_travel.domain.entities.HotelEntity;
+import com.gabo.best_travel.domain.entities.jpa.HotelEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

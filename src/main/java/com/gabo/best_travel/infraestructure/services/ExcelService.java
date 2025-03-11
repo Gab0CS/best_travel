@@ -14,8 +14,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.gabo.best_travel.domain.entities.CustomerEntity;
-import com.gabo.best_travel.domain.repositories.CustomerRepository;
+import com.gabo.best_travel.domain.entities.jpa.CustomerEntity;
+import com.gabo.best_travel.domain.repositories.jpa.CustomerRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.ReportService;
 
 import lombok.AllArgsConstructor;

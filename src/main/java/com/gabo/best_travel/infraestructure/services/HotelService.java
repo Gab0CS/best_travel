@@ -14,8 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.stream.Collectors;
 
 import com.gabo.best_travel.api.models.response.HotelResponse;
-import com.gabo.best_travel.domain.entities.HotelEntity;
-import com.gabo.best_travel.domain.repositories.HotelRepository;
+import com.gabo.best_travel.domain.entities.jpa.HotelEntity;
+import com.gabo.best_travel.domain.repositories.jpa.HotelRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IHotelService;
 import com.gabo.best_travel.util.SortType;
 import com.gabo.best_travel.util.constants.CacheConstants;

@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.gabo.best_travel.api.models.response.FlyResponse;
-import com.gabo.best_travel.domain.entities.FlyEntity;
-import com.gabo.best_travel.domain.repositories.FlyRepository;
+import com.gabo.best_travel.domain.entities.jpa.FlyEntity;
+import com.gabo.best_travel.domain.repositories.jpa.FlyRepository;
 import com.gabo.best_travel.infraestructure.abstract_service.IFlyService;
 import com.gabo.best_travel.util.SortType;
 import com.gabo.best_travel.util.constants.CacheConstants;

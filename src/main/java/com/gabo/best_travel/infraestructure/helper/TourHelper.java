@@ -9,14 +9,14 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.gabo.best_travel.domain.entities.CustomerEntity;
-import com.gabo.best_travel.domain.entities.FlyEntity;
-import com.gabo.best_travel.domain.entities.HotelEntity;
-import com.gabo.best_travel.domain.entities.ReservationEntity;
-import com.gabo.best_travel.domain.entities.TicketEntity;
-import com.gabo.best_travel.domain.entities.TourEntity;
-import com.gabo.best_travel.domain.repositories.ReservationRepository;
-import com.gabo.best_travel.domain.repositories.TicketRepository;
+import com.gabo.best_travel.domain.entities.jpa.CustomerEntity;
+import com.gabo.best_travel.domain.entities.jpa.FlyEntity;
+import com.gabo.best_travel.domain.entities.jpa.HotelEntity;
+import com.gabo.best_travel.domain.entities.jpa.ReservationEntity;
+import com.gabo.best_travel.domain.entities.jpa.TicketEntity;
+import com.gabo.best_travel.domain.entities.jpa.TourEntity;
+import com.gabo.best_travel.domain.repositories.jpa.ReservationRepository;
+import com.gabo.best_travel.domain.repositories.jpa.TicketRepository;
 import com.gabo.best_travel.infraestructure.services.ReservationService;
 import com.gabo.best_travel.infraestructure.services.TicketService;
 import com.gabo.best_travel.util.BestTravelUtil;

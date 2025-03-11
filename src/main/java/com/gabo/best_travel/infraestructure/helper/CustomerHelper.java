@@ -3,7 +3,7 @@ package com.gabo.best_travel.infraestructure.helper;
 import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
-import com.gabo.best_travel.domain.repositories.CustomerRepository;
+import com.gabo.best_travel.domain.repositories.jpa.CustomerRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
