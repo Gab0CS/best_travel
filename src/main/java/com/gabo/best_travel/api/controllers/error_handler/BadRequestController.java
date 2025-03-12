@@ -12,13 +12,14 @@ import com.gabo.best_travel.api.models.response.BaseErrorResponse;
 import com.gabo.best_travel.api.models.response.ErrorResponse;
 import com.gabo.best_travel.api.models.response.ErrorsResponse;
 import com.gabo.best_travel.util.exceptions.IdNotFoundException;
+import com.gabo.best_travel.util.exceptions.UsernameNotFoundException;
 
 @RestControllerAdvice
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestController {
     
-    @ExceptionHandler(IdNotFoundException.class)
-    public BaseErrorResponse handleIdNotFound(IdNotFoundException exception){
+    @ExceptionHandler({IdNotFoundException.class, UsernameNotFoundException.class})
+    public BaseErrorResponse handleIdNotFound(RuntimeException exception){
         return ErrorResponse.builder()
         .message(exception.getMessage())
         .status(HttpStatus.BAD_REQUEST.name())

@@ -1,6 +1,7 @@
 package com.gabo.best_travel.domain.entities.documents;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,5 +17,5 @@ import lombok.NoArgsConstructor;
 public class Role {
 
     @Field(name = "granted_authorities")
-    private List<String> grantedAuthorities;
+    private Set<String> grantedAuthorities;
 }
